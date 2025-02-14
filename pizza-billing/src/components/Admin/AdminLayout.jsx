@@ -14,30 +14,13 @@ export default function AdminLayout() {
 
   const handleLogout = async () => {
     try {
-      // Get token from localStorage
-      const token = localStorage.getItem('token');
-      
-      // Call logout API with auth header
       await axios.post('http://localhost:3000/api/logout', {}, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        withCredentials: true
       });
-
-      // Clear local storage
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-
-      // Clear auth context
       logout();
-
-      // Redirect to login
       navigate('/login');
     } catch (err) {
       console.error('Logout failed:', err);
-      // Still clear everything and redirect even if API call fails
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
       logout();
       navigate('/login');
     }

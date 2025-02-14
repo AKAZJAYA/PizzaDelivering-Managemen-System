@@ -77,7 +77,7 @@ const Register = () => {
             {/* Name Field */}
             <div className="space-y-2">
               <label htmlFor="name" className="text-gray-700 font-semibold">
-                Full Name
+                First Name
               </label>
               <div className="flex items-center bg-gray-50 rounded-full px-4 border border-gray-300 focus-within:border-red-600">
                 <FaUser className="text-gray-400" />

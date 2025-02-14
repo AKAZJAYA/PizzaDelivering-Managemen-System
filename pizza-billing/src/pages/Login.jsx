@@ -20,16 +20,14 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/login', formData);
+      const response = await axios.post('http://localhost:3000/api/login', formData, {
+        withCredentials: true // Important for handling cookies
+      });
 
       if (response.data) {
-        // Store user data and token
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('token', response.data.token);
         login(response.data.user);
         
-        // Check if admin
-        if (formData.email === 'admin@gmail.com' && formData.password === 'admin@gmail.com') {
+        if (formData.email === 'admin@gmail.com') {
           navigate('/admin/dash');
         } else {
           navigate('/dashboard');

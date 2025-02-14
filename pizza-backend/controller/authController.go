@@ -114,11 +114,12 @@ func Login (c *fiber.Ctx) error {
 	}
 
 	cookie := fiber.Cookie{
-
-		Name: "jwt",
-		Value: token,
-		Expires: time.Now().Add(time.Hour * 24),
+		Name:     "jwt",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
 		HTTPOnly: true,
+		Secure:   false,          // Set to true in production
+		SameSite: "none",         // Allow cross-site cookies
 	}
 
 	c.Cookie(&cookie)
@@ -167,4 +168,43 @@ func AuthMiddleware(c *fiber.Ctx) error {
     }
 
     return c.Next()
+}
+
+func GetUserProfile(c *fiber.Ctx) error {
+    // Get JWT cookie
+    cookie := c.Cookies("jwt")
+    if cookie == "" {
+        return c.Status(401).JSON(fiber.Map{
+            "message": "Unauthorized",
+        })
+    }
+
+    // Parse the JWT token
+    id, err := util.Parsejwt(cookie)
+    if err != nil {
+        return c.Status(401).JSON(fiber.Map{
+            "message": "Invalid token",
+        })
+    }
+
+    // Convert string ID to uint
+    userId, _ := strconv.Atoi(id)
+
+    // Get user data
+    var user models.User
+    if err := database.DB.Where("id = ?", userId).First(&user).Error; err != nil {
+        return c.Status(404).JSON(fiber.Map{
+            "message": "User not found",
+        })
+    }
+
+    return c.JSON(fiber.Map{
+        "user": fiber.Map{
+            "id":       user.ID,
+            "username": user.Username,
+            "email":    user.Email,
+            "phone":    user.Phone,
+            "address":  user.Address,
+        },
+    })
 }

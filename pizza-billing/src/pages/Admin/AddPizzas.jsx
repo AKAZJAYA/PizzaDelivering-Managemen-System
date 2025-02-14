@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaUpload } from 'react-icons/fa';
 
 const AddPizza = () => {
   const navigate = useNavigate();
@@ -8,43 +9,58 @@ const AddPizza = () => {
     name: '',
     description: '',
     price: '',
-    image: '',
     category: 'Vegetarian'
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const categories = ['Vegetarian', 'Classic', 'Supreme', 'Signature', 'Favorite'];
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError('Image size should be less than 5MB');
+        return;
+      }
+      setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
+    if (!selectedImage) {
+      setError('Please select an image');
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Get token from localStorage
-      const token = localStorage.getItem('token');
+      const formPayload = new FormData();
+      formPayload.append('name', formData.name);
+      formPayload.append('description', formData.description);
+      formPayload.append('price', parseFloat(formData.price));
+      formPayload.append('category', formData.category);
+      formPayload.append('image', selectedImage);
 
-      // Format price as number
-      const requestData = {
-        ...formData,
-        price: parseFloat(formData.price) // Convert price to number
-      };
-
-      // Add auth header and content type
-      const config = {
+      await axios.post('http://localhost:3000/api/pizzas', formPayload, {
+        withCredentials: true,
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'multipart/form-data'
         }
-      };
+      });
 
-      await axios.post('http://localhost:3000/api/pizzas', requestData, config);
       alert('Pizza added successfully!');
       navigate('/admin/inventory');
     } catch (err) {
       console.error('Error adding pizza:', err);
-      setError(err.response?.data?.message || 'Failed to add pizza. Please check your authorization.');
+      setError(err.response?.data?.message || 'Failed to add pizza');
     } finally {
       setLoading(false);
     }
@@ -70,6 +86,54 @@ const AddPizza = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Image Upload Section */}
+            <div className="space-y-2">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Pizza Image
+              </label>
+              <div className="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-red-600 transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer flex flex-col items-center"
+                >
+                  {previewUrl ? (
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-48 h-48 object-cover rounded-lg mb-4"
+                    />
+                  ) : (
+                    <div className="w-48 h-48 bg-gray-100 flex items-center justify-center rounded-lg mb-4">
+                      <FaUpload className="text-4xl text-gray-400" />
+                    </div>
+                  )}
+                  <span className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">
+                    {previewUrl ? 'Change Image' : 'Upload Image'}
+                  </span>
+                </label>
+                {previewUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImage(null);
+                      setPreviewUrl(null);
+                    }}
+                    className="mt-2 text-red-600 hover:text-red-700"
+                  >
+                    Remove Image
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Other form fields remain the same */}
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Pizza Name
@@ -103,25 +167,11 @@ const AddPizza = () => {
                 Price ($)
               </label>
               <input
-                type="text"
+                type="number"
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
                 step="0.01"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Image URL
-              </label>
-              <input
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
                 required
               />

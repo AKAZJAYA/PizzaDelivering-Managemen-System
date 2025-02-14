@@ -30,6 +30,7 @@ func Connect() {
 	DB=database
 	database.AutoMigrate(
 		&models.User{},
-		&models.Pizza{}, // Add this line
+		&models.Pizza{},
+		&models.CartItem{}, // Add this line
 	)
 }

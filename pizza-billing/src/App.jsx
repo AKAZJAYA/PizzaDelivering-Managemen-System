@@ -7,16 +7,18 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PackageDetails from "./components/PackageDetails";
 import Login from "./pages/Login";
-import Register from "./pages/register";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
 import SideBar from "./components/Admin/SideBar"
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 
 import ViewInventory from "./pages/Admin/ViewInventory";
-import UpdatePizza from "./pages/Admin/UpdatePizza";
 import AddPizza from "./pages/Admin/AddPizzas";
 import AdminDash from "./pages/Admin/AdminDash";
+import AdminLayout from "./components/Admin/AdminLayout";
+import EditPizzaDetails from "./pages/Admin/EditPizzaDetails";
+import PizzaList from "./components/Admin/PizzaList";
 
 
 
@@ -38,7 +40,8 @@ function App() {
               <Route path="dash" element={<AdminDash />} />
               <Route path="add-pizza" element={<AddPizza />} />
               <Route path="inventory" element={<ViewInventory />} />
-              <Route path="update-pizza" element={<UpdatePizza />} />
+              <Route path="update-pizza" element={<PizzaList />} />
+              <Route path="update-pizza/:id" element={<EditPizzaDetails />} />
             </Route>
 
             {/* Existing Routes */}

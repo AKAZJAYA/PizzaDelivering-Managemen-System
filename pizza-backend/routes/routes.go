@@ -11,23 +11,35 @@ func Setup(app *fiber.App) {
         AllowOrigins:     "http://localhost:5173",
         AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
         AllowCredentials: true,
-        AllowMethods:     "GET, POST, HEAD, PUT, DELETE, PATCH",
+        AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+        ExposeHeaders:    "Set-Cookie",
     }))
 
     // Public routes
     app.Post("/api/register", controller.Register)
     app.Post("/api/login", controller.Login)
     app.Post("/api/logout", controller.Logout)
-
-    // Protected routes - add the middleware
-    // api := app.Group("/api")
-    // api.Use(controller.AuthMiddleware)
-    // Add your protected routes here
-
-    // Pizza routes (protected by AuthMiddleware)
-    app.Post("/api/pizzas", controller.CreatePizza)
     app.Get("/api/pizzas", controller.GetAllPizzas)
     app.Get("/api/pizzas/:id", controller.GetPizzaByID)
-    app.Put("/api/pizzas/:id", controller.UpdatePizza)
-    // api.Delete("/pizzas/:id", controller.DeletePizza)
+
+    // Protected routes
+    api := app.Group("/api")
+    // api.Use(controller.AuthMiddleware)
+
+    // Protected cart routes - make sure these are under the protected group
+    api.Post("/cart", controller.AddToCart)
+    api.Get("/cart", controller.GetCart)
+    api.Delete("/cart/:id", controller.RemoveFromCart)
+    api.Delete("/cart", controller.ClearCart)
+    api.Put("/cart/:id", controller.UpdateCartItem)
+
+    // Protected pizza management routes
+    api.Post("/pizzas", controller.CreatePizza)
+    api.Put("/pizzas/:id", controller.UpdatePizza)
+    api.Delete("/pizzas/:id", controller.DeletePizza)
+
+    // User profile route
+    api.Get("/user/profile", controller.GetUserProfile)
+    app.Static("/uploads", "./uploads")
+
 }
