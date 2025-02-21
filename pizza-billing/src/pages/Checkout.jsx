@@ -63,7 +63,7 @@ const Checkout = () => {
 
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
-    setShowCardForm(method === 'card');
+    setShowCardForm(method === 'Card');
   };
 
   const handleCardDetailsChange = (e) => {
@@ -125,7 +125,7 @@ const Checkout = () => {
     }
   };
 
-  const isTakeaway = paymentMethod === 'takeaway';
+  const isTakeaway = paymentMethod === 'TakeAway';
 
   const renderDeliveryForm = () => (
     <>
