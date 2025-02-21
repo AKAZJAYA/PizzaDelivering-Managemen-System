@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { FaPizzaSlice, FaPlus, FaList, FaEdit, FaSignOutAlt } from 'react-icons/fa';
+import { FaPizzaSlice, FaPlus, FaList, FaEdit, FaSignOutAlt, FaTruck } from 'react-icons/fa';
 import { useAuth } from '../../store/AuthContext';
 import axios from 'axios';
 
@@ -62,6 +62,14 @@ export default function AdminLayout() {
           >
             <FaEdit />
             <span>Update Pizza</span>
+          </Link>
+
+          <Link
+            to="/admin/delivery"
+            className={`flex items-center space-x-3 px-6 py-3 hover:bg-red-700 transition-colors ${isActive('/admin/delivery')}`}
+          >
+            <FaTruck />
+            <span>Delivery Management</span>
           </Link>
 
           <button

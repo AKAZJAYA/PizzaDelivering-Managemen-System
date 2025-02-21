@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"fmt"
+	// "fmt"
 	"strconv"
 
 	"github.com/AKAZJAYA/pizza-backend/database"
@@ -18,7 +18,7 @@ func AddToCart(c *fiber.Ctx) error {
 	}
 
 	// Log the raw request body
-	fmt.Printf("Raw request body: %s\n", string(c.Body()))
+	// fmt.Printf("Raw request body: %s\n", string(c.Body()))
 
 	// Parse request body
 	if err := c.BodyParser(&data); err != nil {
@@ -30,7 +30,7 @@ func AddToCart(c *fiber.Ctx) error {
 	}
 
 	// Log parsed data
-	fmt.Printf("Parsed data: PizzaID=%d, Quantity=%d\n", data.PizzaID, data.Quantity)
+	// fmt.Printf("Parsed data: PizzaID=%d, Quantity=%d\n", data.PizzaID, data.Quantity)
 
 	// Validate pizza_id
 	if data.PizzaID == 0 {

@@ -45,6 +45,7 @@ func Setup(app *fiber.App) {
 
     // Order routes
     api.Post("/orders", controller.CreateOrder)
-    api.Get("/orders", controller.GetUserOrders)
+    api.Get("/orders", controller.GetAllOrders)
     api.Get("/orders/:id", controller.GetOrderDetails)
+    api.Put("/orders/:id/status", controller.UpdateOrderStatus)
 }

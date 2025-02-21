@@ -8,7 +8,7 @@ type Order struct {
     User        User      `json:"user" gorm:"foreignKey:UserID"`
     OrderItems  []OrderItem `json:"order_items"`
     TotalAmount float64   `json:"total_amount"`
-    Status      string    `json:"status"`
+    Status      string    `json:"status"`  // "pending", "delivered", "cancelled"
     CreatedAt   time.Time `json:"created_at"`
 
     // Delivery Details

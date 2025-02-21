@@ -2,6 +2,7 @@ package controller
 
 import (
 	// "fmt"
+	"log"
 	"strconv"
 
 	"github.com/AKAZJAYA/pizza-backend/database"
@@ -113,13 +114,16 @@ func CreateOrder(c *fiber.Ctx) error {
     })
 }
 
-func GetUserOrders(c *fiber.Ctx) error {
-    cookie := c.Cookies("jwt")
-    id, _ := util.Parsejwt(cookie)
-    userId, _ := strconv.Atoi(id)
+func GetAllOrders(c *fiber.Ctx) error {
 
     var orders []models.Order
-    database.DB.Preload("OrderItems.Pizza").Where("user_id = ?", userId).Find(&orders)
+    result := database.DB.Preload("OrderItems.Pizza").Find(&orders)
+
+    if result.Error != nil {
+        return c.Status(500).JSON(fiber.Map{
+            "message": "Error retrieving orders",
+        })
+    }
 
     return c.JSON(orders)
 }
@@ -141,4 +145,59 @@ func GetOrderDetails(c *fiber.Ctx) error {
     }
 
     return c.JSON(order)
+}
+
+func UpdateOrderStatus(c *fiber.Ctx) error {
+    orderId := c.Params("id")
+    log.Printf("Updating order status for order ID: %s", orderId)
+    
+    // Check if orderId is valid
+    if orderId == "" {
+        return c.Status(400).JSON(fiber.Map{
+            "message": "Order ID is required",
+            "error":   "Invalid order ID",
+        })
+    }
+
+    // Parse status from request body
+    var data struct {
+        Status string `json:"status"`
+    }
+    if err := c.BodyParser(&data); err != nil {
+        return c.Status(400).JSON(fiber.Map{
+            "message": "Error parsing request body",
+            "error":   err.Error(),
+        })
+    }
+
+    // Convert orderId string to uint
+    orderIdInt, err := strconv.ParseUint(orderId, 10, 32)
+    if err != nil {
+        return c.Status(400).JSON(fiber.Map{
+            "message": "Invalid order ID format",
+            "error":   err.Error(),
+        })
+    }
+
+    // Update order status
+    var order models.Order
+    if err := database.DB.First(&order, orderIdInt).Error; err != nil {
+        return c.Status(404).JSON(fiber.Map{
+            "message": "Order not found",
+            "error":   err.Error(),
+        })
+    }
+
+    order.Status = data.Status
+    if err := database.DB.Save(&order).Error; err != nil {
+        return c.Status(500).JSON(fiber.Map{
+            "message": "Error updating order status",
+            "error":   err.Error(),
+        })
+    }
+
+    return c.JSON(fiber.Map{
+        "message": "Order status updated successfully",
+        "order":   order,
+    })
 }

@@ -19,7 +19,8 @@ import AdminDash from "./pages/Admin/AdminDash";
 import AdminLayout from "./components/Admin/AdminLayout";
 import EditPizzaDetails from "./pages/Admin/EditPizzaDetails";
 import PizzaList from "./components/Admin/PizzaList";
-
+import OrderHistory from "./pages/OrderHistory";
+import DeliveryManagement from "./pages/Admin/Deliverymanagement";
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
               <Route path="inventory" element={<ViewInventory />} />
               <Route path="update-pizza" element={<PizzaList />} />
               <Route path="update-pizza/:id" element={<EditPizzaDetails />} />
+              <Route path="delivery" element={<DeliveryManagement />} />
             </Route>
 
             {/* Existing Routes */}
@@ -55,6 +57,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/add-pizza" element={<AddPizza />} />
+              <Route path="/orders" element={<OrderHistory />} />
             </Route>
           </Routes>
         </main>
