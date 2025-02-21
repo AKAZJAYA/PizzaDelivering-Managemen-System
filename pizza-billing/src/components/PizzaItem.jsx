@@ -17,7 +17,7 @@ const PizzaItem = ({ pizza, addToCart }) => {
     try {
       setIsAdding(true);
       const sizeAdjustedPizza = {
-        pizza_id: pizza.id,
+        pizzaid: pizza.id,
         name: pizza.name,
         size: selectedSize,
         price: selectedSize === 'small' ? 

@@ -26,6 +26,16 @@ const Cart = () => {
     }
   };
 
+  const handleUpdateQuantity = async (itemId, newQuantity) => {
+    try {
+      console.log('Handling quantity update:', { itemId, newQuantity });
+      await updateCartItem(itemId, newQuantity);
+    } catch (err) {
+      setError('Failed to update item quantity');
+      console.error('Error updating quantity:', err);
+    }
+  };
+
   const totalPrice = cart.reduce((total, item) => {
     return total + (parseFloat(item.price) * item.quantity)
   }, 0).toFixed(2);
@@ -86,7 +96,7 @@ const Cart = () => {
                   key={item._id} 
                   item={item} 
                   removeFromCart={handleRemoveFromCart}
-                  updateQuantity={(quantity) => updateCartItem(item._id, quantity)}
+                  updateQuantity={handleUpdateQuantity}
                 />
               ))}
             </div>

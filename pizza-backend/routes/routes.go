@@ -32,6 +32,7 @@ func Setup(app *fiber.App) {
     api.Delete("/cart/:id", controller.RemoveFromCart)
     api.Delete("/cart", controller.ClearCart)
     api.Put("/cart/:id", controller.UpdateCartItem)
+    api.Get("/cart/total", controller.GetCartTotal)
 
     // Protected pizza management routes
     api.Post("/pizzas", controller.CreatePizza)
@@ -42,4 +43,8 @@ func Setup(app *fiber.App) {
     api.Get("/user/profile", controller.GetUserProfile)
     app.Static("/uploads", "./uploads")
 
+    // Order routes
+    api.Post("/orders", controller.CreateOrder)
+    api.Get("/orders", controller.GetUserOrders)
+    api.Get("/orders/:id", controller.GetOrderDetails)
 }

@@ -1,6 +1,7 @@
 import { useCart } from "../store/CartContext";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import PizzaItem from "../components/PizzaItem";
 
 const Menu = () => {
   const { addToCart } = useCart();
@@ -91,36 +92,13 @@ const Menu = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-              {items.map((pizza) => {
-                // console.log('product: ', pizza);
-                return (
-                  <div
-                    key={pizza.id}
-                    className="bg-white p-6 rounded-lg shadow-lg"
-                  >
-                    <img
-                      src={pizza.image}
-                      alt={pizza.name}
-                      className="w-full h-48 object-cover rounded-md mb-4"
-                      onError={(e) => {
-                        e.target.src = "/default-pizza.jpg";
-                        console.log("Failed to load image:", pizza.image); // Debug log
-                      }}
-                    />
-                    <h3 className="text-xl font-semibold mb-2">{pizza.name}</h3>
-                    <p className="text-gray-600 mb-3">{pizza.description}</p>
-                    <p className="text-2xl font-bold text-red-600 mb-3">
-                      ${pizza.price}
-                    </p>
-                    <button
-                      onClick={() => addToCart(pizza)}
-                      className="w-full bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-700 transition-colors"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                );
-              })}
+              {items.map((pizza) => (
+                <PizzaItem 
+                  key={pizza.id}
+                  pizza={pizza}
+                  addToCart={addToCart}
+                />
+              ))}
             </div>
           </div>
         )

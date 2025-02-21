@@ -31,6 +31,8 @@ func Connect() {
 	database.AutoMigrate(
 		&models.User{},
 		&models.Pizza{},
-		&models.CartItem{}, // Add this line
+		&models.CartItem{},
+		&models.Order{},      // Add this
+		&models.OrderItem{},  // Add this
 	)
 }

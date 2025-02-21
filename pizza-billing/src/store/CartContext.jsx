@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, []);
 
-  const fetchCart = async () => {
+  const fetchCart = async () => {    
     try {
       const response = await axios.get('http://localhost:3000/api/cart', {
         withCredentials: true
@@ -27,20 +27,19 @@ export const CartProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
+    
   };
 
   const addToCart = async (pizza) => {
     try {
       const cartItem = {
-        pizza_id: pizza.id,
+        pizza_id: pizza.pizzaid,
         name: pizza.name,
         quantity: 1,
         size: pizza.size,
         price: parseFloat(pizza.price),
-        image: pizza.image
+        image_url: pizza.image
       };
-
-      console.log('Sending cart item:', cartItem); // Debug log
 
       const response = await axios.post('http://localhost:3000/api/cart', cartItem, {
         withCredentials: true,
@@ -59,9 +58,9 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeFromCart = async (id) => {
+  const removeFromCart = async (itemId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/cart/remove/${id}`, {
+      await axios.delete(`http://localhost:3000/api/cart/${itemId}`, {
         withCredentials: true
       });
       await fetchCart(); // Refresh cart after removing item
@@ -72,6 +71,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = async () => {
+    console.log('Clearing cart...');
+    
     try {
       const token = localStorage.getItem('token');
       await axios.delete('http://localhost:3000/api/cart', {
@@ -83,13 +84,29 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const updateCartItem = async (id, quantity) => {
+  const updateCartItem = async (itemId, quantity) => {
+    if (!itemId) {
+      console.error('Item ID is missing');
+      throw new Error('Item ID is required');
+    }
+
+    console.log('Updating item:', { itemId, quantity });
+    
     try {
-      await axios.put(`http://localhost:3000/api/cart/update/${id}`, 
+      const response = await axios.put(
+        `http://localhost:3000/api/cart/${itemId}`, 
         { quantity },
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
       );
-      await fetchCart(); // Refresh cart after updating item
+
+      if (response.data) {
+        await fetchCart(); // Refresh cart after updating item
+      }
     } catch (err) {
       console.error('Error updating cart item:', err);
       throw new Error('Failed to update cart item');

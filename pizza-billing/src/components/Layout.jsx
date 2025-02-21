@@ -12,7 +12,7 @@ export default function Layout() {
 
   if(location.pathname === "/home" || location.pathname === "/login" || location.pathname === "/register") {
     header = <DefaultNavbar />
-  } else if(location.pathname === "/dashboard"  || location.pathname === "/menu" || location.pathname === "/cart") {
+  } else if(location.pathname === "/dashboard"  || location.pathname === "/menu" || location.pathname === "/cart" || location.pathname === "/checkout") {
     header = <DashNavBar />
   }
 
