@@ -18,7 +18,7 @@ export const CartProvider = ({ children }) => {
 
   const fetchCart = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/cart/items', {
+      const response = await axios.get('http://localhost:3000/api/cart', {
         withCredentials: true
       });
       setCart(response.data);
@@ -32,7 +32,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (pizza) => {
     try {
       const cartItem = {
-        pizzaId: pizza.pizzaId, // Use the pizzaId from the passed pizza object
+        pizza_id: pizza.id,
         name: pizza.name,
         quantity: 1,
         size: pizza.size,

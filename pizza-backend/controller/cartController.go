@@ -1,6 +1,7 @@
 package controller
 
 import (
+	// "fmt"
 	"strconv"
 
 	"github.com/AKAZJAYA/pizza-backend/database"
@@ -12,15 +13,30 @@ import (
 // Add item to cart
 func AddToCart(c *fiber.Ctx) error {
     var data struct {
-        PizzaID  uint `json:"pizza_id"`
+        PizzaID  uint `json:"pizza_id"` // Different field name
         Quantity int  `json:"quantity"`
     }
+
+    // Log the raw request body
+    // fmt.Printf("Raw request body: %s\n", string(c.Body()))
 
     // Parse request body
     if err := c.BodyParser(&data); err != nil {
         return c.Status(400).JSON(fiber.Map{
             "message": "Error parsing request body",
             "error":   err.Error(),
+            "received_data": string(c.Body()),
+        })
+    }
+
+    // Log parsed data
+    // fmt.Printf("Parsed data: PizzaID=%d, Quantity=%d\n", data.PizzaID, data.Quantity)
+
+    // Validate pizza_id
+    if data.PizzaID == 0 {
+        return c.Status(400).JSON(fiber.Map{
+            "message": "Invalid pizza_id",
+            "received_data": data,
         })
     }
 
@@ -46,6 +62,7 @@ func AddToCart(c *fiber.Ctx) error {
     if err := database.DB.First(&pizza, data.PizzaID).Error; err != nil {
         return c.Status(404).JSON(fiber.Map{
             "message": "Pizza not found",
+			"error":   err.Error(),
         })
     }
 

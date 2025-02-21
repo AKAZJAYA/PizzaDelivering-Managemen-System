@@ -8,7 +8,7 @@ const CartItem = ({ item, removeFromCart, updateQuantity }) => {
     if (newQuantity < 1) return;
     try {
       setIsUpdating(true);
-      await updateQuantity(item._id, newQuantity);
+      await updateQuantity(item.id, newQuantity);
     } catch (err) {
       console.error('Error updating quantity:', err);
       alert('Failed to update quantity. Please try again.');
