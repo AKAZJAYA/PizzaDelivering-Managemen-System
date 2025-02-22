@@ -22,10 +22,13 @@ import PizzaList from "./components/Admin/PizzaList";
 import OrderHistory from "./pages/OrderHistory";
 import DeliveryManagement from "./pages/Admin/Deliverymanagement";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <Router>
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow">
           <Routes>

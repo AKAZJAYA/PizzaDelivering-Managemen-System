@@ -3,6 +3,7 @@ import { FaPizzaSlice, FaShoppingCart, FaHome, FaList, FaUserCircle, FaUserPlus 
 import { useAuth } from "../store/AuthContext"; // Add this import
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify'; // Add this import
 
 // Create UserContext
 export const UserContext = createContext();
@@ -129,16 +130,22 @@ export function DashNavBar({ children }) {
   };
 
   const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:3000/api/logout', {}, {
-        withCredentials: true
-      });
-      logout();
-      navigate('/login');
-    } catch (err) {
-      console.error('Logout failed:', err);
-      logout();
-      navigate('/login');
+    const confirmLogout = window.confirm('Are you sure you want to logout?');
+    
+    if (confirmLogout) {
+      try {
+        await axios.post('http://localhost:3000/api/logout', {}, {
+          withCredentials: true
+        });
+        logout();
+        toast.success('Logged out successfully');
+        navigate('/login');
+      } catch (err) {
+        toast.error('Logout failed');
+        console.error('Logout failed:', err);
+        logout();
+        navigate('/login');
+      }
     }
   };
 

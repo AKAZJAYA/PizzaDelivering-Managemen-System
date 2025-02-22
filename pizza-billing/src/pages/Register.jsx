@@ -37,12 +37,12 @@ const Register = () => {
       });
       
       if (response.data) {
-        alert('Registration successful! Please login.');
+        toast.success('Registration successful! Please login.');
         navigate('/login');
       }
     } catch (err) {
-      console.error('Registration error:', err);
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      toast.error(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Registration failed');
     } finally {
       setIsLoading(false);
     }

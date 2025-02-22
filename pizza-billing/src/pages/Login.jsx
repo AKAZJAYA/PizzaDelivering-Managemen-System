@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';
 import axios from 'axios';
 import { useAuth } from '../store/AuthContext';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Login = () => {
 
       if (response.data) {
         login(response.data.user);
-        
+        toast.success('Logged in successfully!');
         if (formData.email === 'admin@gmail.com') {
           navigate('/admin/dash');
         } else {
@@ -34,6 +35,7 @@ const Login = () => {
         }
       }
     } catch (err) {
+      toast.error(err.response?.data?.message || 'Login failed');
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);

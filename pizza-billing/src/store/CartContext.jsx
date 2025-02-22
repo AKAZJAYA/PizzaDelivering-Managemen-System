@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CartContext = createContext();
 
@@ -50,9 +51,11 @@ export const CartProvider = ({ children }) => {
 
       if (response.data) {
         await fetchCart(); // Refresh cart after successful addition
+        toast.success('Added to cart successfully');
         return response.data;
       }
     } catch (error) {
+      toast.error('Failed to add item to cart');
       console.error('Error adding to cart:', error);
       throw new Error(error.response?.data?.message || 'Failed to add to cart');
     }
@@ -64,7 +67,9 @@ export const CartProvider = ({ children }) => {
         withCredentials: true
       });
       await fetchCart(); // Refresh cart after removing item
+      toast.success('Item removed from cart');
     } catch (err) {
+      toast.error('Failed to remove item from cart');
       console.error('Error removing from cart:', err);
       throw new Error('Failed to remove item from cart');
     }

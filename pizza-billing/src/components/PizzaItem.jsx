@@ -28,7 +28,6 @@ const PizzaItem = ({ pizza, addToCart }) => {
       
       console.log('Adding pizza:', sizeAdjustedPizza); // Debug log
       await addToCart(sizeAdjustedPizza);
-      navigate('/cart');
     } catch (err) {
       console.error('Error adding to cart:', err);
       alert('Failed to add item to cart. Please try again.');

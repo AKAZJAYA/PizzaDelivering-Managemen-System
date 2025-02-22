@@ -3,6 +3,7 @@ import { useCart } from "../store/CartContext";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
@@ -114,12 +115,12 @@ const Checkout = () => {
 
       if (response.data) {
         await clearCart();
-        alert('Order placed successfully!');
+        toast.success('Order placed successfully!');
         navigate('/dashboard');
       }
     } catch (err) {
+      toast.error('Failed to place order. Please try again.');
       console.error("Order Error: ", err);
-      alert('Failed to place order. Please try again.');
     } finally {
       setIsProcessing(false);
     }
